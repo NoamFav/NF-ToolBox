@@ -1,0 +1,28 @@
+# Binaries
+/server
+/keygen
+*.exe
+
+# Environment
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+/dist/
+/bin/
+
+# Logs
+*.log
+
+# Test
+coverage.out
