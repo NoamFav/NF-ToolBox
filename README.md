@@ -1,85 +1,92 @@
-# NF-ToolBox
+# 🧰 NF-ToolBox
 
-License server and toolbox CLI for NF Software tools.
+<div align="center">
+
+<img src="https://img.shields.io/badge/go-1.21+-00ADD8.svg?style=for-the-badge&logo=go" alt="Go">
+<img src="https://img.shields.io/badge/license-Proprietary-orange.svg?style=for-the-badge" alt="License">
+
+**License server and toolbox CLI for NF Software tools**
+
+[Setup](#setup) · [Toolbox Commands](#toolbox-commands) · [API](#api-endpoints) · [Deploy](#deploy)
+
+</div>
+
+---
+
+NF-ToolBox is a license management system consisting of a Go API server, a CLI toolbox for end users, and a shared license verification library that any NF tool can embed.
+
+---
 
 ## Components
 
-- **Server** (`cmd/server/`) - License API server
-- **Toolbox** (`cmd/toolbox/`) - CLI for managing tools
-- **License Package** (`pkg/license/`) - Shared verification library
+| Component | Path | Purpose |
+|-----------|------|---------|
+| **Server** | `cmd/server/` | License API server |
+| **Toolbox** | `cmd/toolbox/` | CLI for managing tools |
+| **License Package** | `pkg/license/` | Shared verification library |
 
-## Quick Start
+---
 
-### 1. Setup Database
+## Setup
 
 ```bash
+# 1. Create database
 createdb license_db
 psql -d license_db < migrations/001_initial.sql
-```
 
-### 2. Generate Keys
-
-```bash
+# 2. Generate keys
 go run cmd/keygen/main.go
 # Add output to .env
-```
 
-### 3. Configure
-
-```bash
+# 3. Configure
 cp .env.example .env
-# Edit .env with your values
-```
 
-### 4. Run Server
-
-```bash
+# 4. Run server
 make run
-# or
-go run cmd/server/main.go
-```
 
-### 5. Build Toolbox
-
-```bash
+# 5. Build toolbox
 go build -o bin/nf-toolbox cmd/toolbox/main.go
 ```
+
+---
 
 ## Toolbox Commands
 
 ```bash
-nf-toolbox login          # Login to your account
-nf-toolbox logout         # Logout
-nf-toolbox list           # List all tools
-nf-toolbox install <tool> # Install a tool
-nf-toolbox uninstall <tool>
-nf-toolbox update         # Update tools & renew license
-nf-toolbox sync           # Sync license after purchase
-nf-toolbox devices        # List activated devices
-nf-toolbox status         # Show current status
+nf-toolbox login              # Login to your account
+nf-toolbox logout             # Logout
+nf-toolbox list               # List all tools
+nf-toolbox install <tool>     # Install a tool
+nf-toolbox uninstall <tool>   # Uninstall a tool
+nf-toolbox update             # Update tools and renew license
+nf-toolbox sync               # Sync license after purchase
+nf-toolbox devices            # List activated devices
+nf-toolbox status             # Show current status
 ```
+
+---
 
 ## API Endpoints
 
 ### Public
-- `POST /api/v1/auth/register` - Create account
-- `POST /api/v1/auth/login` - Login
+- `POST /api/v1/auth/register` — Create account
+- `POST /api/v1/auth/login` — Login
 
-### Protected (requires Bearer token)
-- `POST /api/v1/activate` - Activate license on device
-- `POST /api/v1/renew` - Renew license
-- `GET /api/v1/license` - Get current license
-- `GET /api/v1/devices` - List devices
-- `DELETE /api/v1/devices/{id}` - Deactivate device
-- `GET /api/v1/tools` - List tools catalog
-- `GET /api/v1/me` - Get user info
+### Protected (Bearer token required)
+- `POST /api/v1/activate` — Activate license on device
+- `POST /api/v1/renew` — Renew license
+- `GET  /api/v1/license` — Get current license
+- `GET  /api/v1/devices` — List devices
+- `DELETE /api/v1/devices/{id}` — Deactivate device
+- `GET  /api/v1/tools` — List tools catalog
+- `GET  /api/v1/me` — Get user info
 
 ### Webhooks
-- `POST /webhooks/stripe` - Stripe payment events
+- `POST /webhooks/stripe` — Stripe payment events
+
+---
 
 ## Integrating Tools
-
-Add to your tool's `main.go`:
 
 ```go
 import "github.com/nf-software/nf-toolbox/pkg/license"
@@ -90,12 +97,13 @@ func main() {
         fmt.Fprintln(os.Stderr, "Run: nf-toolbox login && nf-toolbox install your-tool")
         os.Exit(1)
     }
-
     // Your tool code...
 }
 ```
 
-## Deploy to Fly.io
+---
+
+## Deploy
 
 ```bash
 fly launch
@@ -104,19 +112,29 @@ fly secrets set JWT_SECRET=xxx PRIVATE_KEY=yyy
 fly deploy
 ```
 
+---
+
 ## File Structure
 
 ```
 ~/.nf-tools/
-├── bin/           # Installed tool binaries
+├── bin/                # Installed tool binaries
 ├── config/
-│   ├── session.json   # Auth token
-│   ├── license.json   # Signed license
-│   └── state.json     # Renewal state
+│   ├── session.json    # Auth token
+│   ├── license.json    # Signed license
+│   └── state.json      # Renewal state
 └── cache/
-    └── versions.json  # Available versions
+    └── versions.json   # Available versions
 ```
+
+---
 
 ## License
 
-Proprietary - NF Software
+Proprietary — NF Software
+
+---
+
+<div align="center">
+Made with ❤️ by <a href="https://github.com/NoamFav">NoamFav</a>
+</div>
