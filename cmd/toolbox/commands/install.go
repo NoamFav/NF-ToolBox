@@ -56,7 +56,7 @@ func runInstall(cmd *cobra.Command, args []string) error {
 
 	if !targetTool.Owned {
 		fmt.Printf("You don't own %s\n", targetTool.DisplayName)
-		fmt.Printf("Purchase at: https://nf-software.com/%s\n", toolName)
+		fmt.Printf("Purchase at: https://nf-software.com/products/%s\n", toolName)
 		return nil
 	}
 
